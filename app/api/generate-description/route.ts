@@ -72,11 +72,7 @@ Return only the JSON object.
   } catch (err) {
     console.error("[generate-description] Gemini API error:", err);
     return NextResponse.json(
-      {
-        error: "Failed to contact AI service. Please try again.",
-        detail: (err as Error).message,
-        hasKey: Boolean(process.env.GEMINI_API_KEY),
-      },
+      { error: "Failed to contact AI service. Please try again." },
       { status: 502 }
     );
   }
