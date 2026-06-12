@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { callClaude, parseClaudeJson } from "@/lib/anthropic";
+import { callGemini, parseGeminiJson } from "@/lib/gemini";
 
 export interface GenerateDescriptionRequest {
   productName: string;
@@ -68,9 +68,9 @@ Return only the JSON object.
 
   let raw: string;
   try {
-    raw = await callClaude(SYSTEM_PROMPT, userMessage);
+    raw = await callGemini(SYSTEM_PROMPT, userMessage);
   } catch (err) {
-    console.error("[generate-description] Claude API error:", err);
+    console.error("[generate-description] Gemini API error:", err);
     return NextResponse.json(
       { error: "Failed to contact AI service. Please try again." },
       { status: 502 }
@@ -79,7 +79,7 @@ Return only the JSON object.
 
   let output: ProductDescriptionOutput;
   try {
-    output = parseClaudeJson<ProductDescriptionOutput>(raw, "generate-description");
+    output = parseGeminiJson<ProductDescriptionOutput>(raw, "generate-description");
   } catch (err) {
     return NextResponse.json(
       { error: "AI returned malformed data. Please retry.", detail: (err as Error).message },
