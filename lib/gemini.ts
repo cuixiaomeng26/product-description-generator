@@ -1,12 +1,13 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-if (!process.env.GEMINI_API_KEY) {
-  throw new Error(
-    "Missing GEMINI_API_KEY. Add it to .env.local: GEMINI_API_KEY=AIza..."
-  );
+function getClient(): GoogleGenerativeAI {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error(
+      "Missing GEMINI_API_KEY. Add it to .env.local: GEMINI_API_KEY=AIza..."
+    );
+  }
+  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 }
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Model pinned here — change once to update everywhere.
 export const MODEL = "gemini-2.5-flash";
@@ -16,7 +17,7 @@ export async function callGemini(
   systemPrompt: string,
   userMessage: string,
 ): Promise<string> {
-  const model = genAI.getGenerativeModel({
+  const model = getClient().getGenerativeModel({
     model: MODEL,
     systemInstruction: systemPrompt,
     generationConfig: {
